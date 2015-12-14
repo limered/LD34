@@ -10,6 +10,6 @@ public class DropScript : MonoBehaviour {
 
     public void NoActive() {
         var comp = GetComponent<SpriteRenderer>();
-        comp.color = new Color(1, 1, 1);
+        comp.color = new Color(1, 1, 1, 0.5f);
     }
 }

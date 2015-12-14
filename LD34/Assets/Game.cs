@@ -22,7 +22,7 @@ public class Game : MonoBehaviour {
 
     // Use this for initialization
     void Start () {
-    
+        ActivateStemsForPosition();
     }
     
     // Update is called once per frame
@@ -74,7 +74,7 @@ public class Game : MonoBehaviour {
         if(points != 0 && points > nextSpeedUp)
         {
             currentSpeed -= speedDiff;
-            nextSpeedUp = points + points * 2;
+            nextSpeedUp = points + points * 2f;
         }
     }
 
