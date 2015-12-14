@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class Game : MonoBehaviour {
@@ -9,6 +10,9 @@ public class Game : MonoBehaviour {
     public GameObject[] stemsL;
     public GameObject[] flowersR;
     public GameObject[] flowersL;
+
+    public GameObject pointsText;
+    public GameObject liveText;
 
     private float currentSpeed = 1.5f;
     private float speedDiff = 0.15f;
@@ -33,27 +37,23 @@ public class Game : MonoBehaviour {
             lastTick = Time.time;
             for (int i = 0; i < lines.Length; i++) {
                 var comp = lines[i].GetComponent<LineScript>();
-                comp.Tick();
+                var livelost = comp.Tick();
+                if (livelost)
+                {
+                    lives--;
+                    liveText.GetComponent<Text>().text = lives.ToString();
+                    if (lives == 0)
+                    {
+                        EndGame();
+                    }
+                }
+
             }
         }
         CheckPoints();
         CheckSpeedUp();
-        CheckLives();
-    }
 
-    private void CheckLives() {
-        for (int i = 0; i < lines.Length; i++)
-        {
-            var comp = lines[i].GetComponent<LineScript>();
-            if(comp.currentDrop == 5)
-            {
-                lives--;
-            }
-        }
-        if(lives == 0)
-        {
-            EndGame();
-        }
+        pointsText.GetComponent<Text>().text = Mathf.Floor(points).ToString();
     }
 
     private void EndGame()

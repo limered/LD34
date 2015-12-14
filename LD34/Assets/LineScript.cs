@@ -5,9 +5,9 @@ public class LineScript : MonoBehaviour
 {
     public int currentDrop = 0;
 
-    public void Tick()
+    public bool Tick()
     {
-        NextDrop();
+        return NextDrop();
     }
 
     public void Collect() {
@@ -15,14 +15,15 @@ public class LineScript : MonoBehaviour
         TurnOffDrops();
     }
 
-    private void StartDrop()
+    private bool StartDrop()
     {
         var prop = Random.value;
         if (prop < 0.5f)
         {
             currentDrop++;
-            RenderCurrentDrop();
+            return RenderCurrentDrop();
         }
+        return false;
     }
 
     private void TurnOffDrops()
@@ -34,26 +35,27 @@ public class LineScript : MonoBehaviour
         }
     }
 
-    private void NextDrop()
+    private bool NextDrop()
     {
         if (currentDrop == 0)
-            StartDrop();
+            return StartDrop();
         else
         {
             currentDrop++;
-            RenderCurrentDrop();
+            return RenderCurrentDrop();
         }
     }
 
-    private void RenderCurrentDrop()
+    private bool RenderCurrentDrop()
     {
         TurnOffDrops();
         if (currentDrop == 6)
         {
             currentDrop = 0;
-            return;
+            return true;
         }
         var drops = GetComponentsInChildren<DropScript>();
         drops[currentDrop - 1].Active();
+        return false;
     }
 }
