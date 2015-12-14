@@ -4,11 +4,15 @@ using System.Collections;
 public class Game : MonoBehaviour {
 
 
-    public GameObject[] lines; 
+    public GameObject[] lines;
+    public GameObject[] stemsR;
+    public GameObject[] stemsL;
 
     private float currentSpeed = 1.5f;
     private float speedDiff = 0.15f;
     private float lastTick = 0;
+
+    private int flowerPosition = 2;
 
     // Use this for initialization
     void Start () {
@@ -17,12 +21,55 @@ public class Game : MonoBehaviour {
     
     // Update is called once per frame
     void Update () {
-        if(Time.time > lastTick + currentSpeed)
+        CheckMove();
+        if (Time.time > lastTick + currentSpeed)
         {
             lastTick = Time.time;
             for (int i = 0; i < lines.Length; i++) {
                 var comp = lines[i].GetComponent<LineScript>();
                 comp.Tick();
+            }
+        }
+    }
+
+    public void CheckMove() {
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        {
+            ChangePosition(false);
+        }
+        if (Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            ChangePosition(true);
+        }
+    }
+
+    public void ChangePosition(bool left) {
+        if (left)
+            flowerPosition = (flowerPosition == 0) ? 0 : flowerPosition-1;
+        else
+            flowerPosition = (flowerPosition == 5) ? 5 : flowerPosition+1;
+        ActivateStemsForPosition();
+    }
+
+    private void ActivateStemsForPosition()
+    {
+        for(int i = 0; i < 3; i++)
+        {
+            stemsL[i].GetComponent<StemScript>().NoActive();
+            stemsR[i].GetComponent<StemScript>().NoActive();
+        }
+        if(flowerPosition <= 2)
+        {
+            for(int i = 2; i >= flowerPosition; i--)
+            {
+                stemsL[i].GetComponent<StemScript>().Active();
+            }
+        }
+        else
+        {
+            for (int i = 3; i <= flowerPosition; i++)
+            {
+                stemsR[i-3].GetComponent<StemScript>().Active();
             }
         }
     }

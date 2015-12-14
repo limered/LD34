@@ -44,7 +44,10 @@ public class LineScript : MonoBehaviour
     {
         TurnOffDrops();
         if (currentDrop == 6)
+        {
             currentDrop = 0;
+            return;
+        }
         var drops = GetComponentsInChildren<DropScript>();
         drops[currentDrop - 1].Active();
     }
