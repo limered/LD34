@@ -7,6 +7,8 @@ public class Game : MonoBehaviour {
     public GameObject[] lines;
     public GameObject[] stemsR;
     public GameObject[] stemsL;
+    public GameObject[] flowersR;
+    public GameObject[] flowersL;
 
     private float currentSpeed = 1.5f;
     private float speedDiff = 0.15f;
@@ -57,6 +59,8 @@ public class Game : MonoBehaviour {
         {
             stemsL[i].GetComponent<StemScript>().NoActive();
             stemsR[i].GetComponent<StemScript>().NoActive();
+            flowersL[i].GetComponent<StemScript>().NoActive();
+            flowersR[i].GetComponent<StemScript>().NoActive();
         }
         if(flowerPosition <= 2)
         {
@@ -64,6 +68,7 @@ public class Game : MonoBehaviour {
             {
                 stemsL[i].GetComponent<StemScript>().Active();
             }
+            flowersL[flowerPosition].GetComponent<StemScript>().Active();
         }
         else
         {
@@ -71,6 +76,7 @@ public class Game : MonoBehaviour {
             {
                 stemsR[i-3].GetComponent<StemScript>().Active();
             }
+            flowersR[flowerPosition-3].GetComponent<StemScript>().Active();
         }
     }
 }
