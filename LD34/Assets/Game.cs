@@ -14,6 +14,10 @@ public class Game : MonoBehaviour {
     public GameObject pointsText;
     public GameObject liveText;
 
+    public Canvas startScreen;
+    public Canvas endScreen;
+    public Text endPoints;
+
     private float currentSpeed = 1.5f;
     private float speedDiff = 0.15f;
     private float nextSpeedUp = 50;
@@ -21,44 +25,59 @@ public class Game : MonoBehaviour {
 
     private int flowerPosition = 2;
 
+    private bool running = false;
+
     public float points = 0;
     public int lives = 3;
 
     // Use this for initialization
     void Start () {
         ActivateStemsForPosition();
+        startScreen.enabled = true;
+        endScreen.enabled = false;
     }
     
     // Update is called once per frame
     void Update () {
-        CheckMove();
-        if (Time.time > lastTick + currentSpeed)
+        if (!running)
         {
-            lastTick = Time.time;
-            for (int i = 0; i < lines.Length; i++) {
-                var comp = lines[i].GetComponent<LineScript>();
-                var livelost = comp.Tick();
-                if (livelost)
-                {
-                    lives--;
-                    liveText.GetComponent<Text>().text = lives.ToString();
-                    if (lives == 0)
-                    {
-                        EndGame();
-                    }
-                }
-
-            }
+            CheckStart();
         }
-        CheckPoints();
-        CheckSpeedUp();
+        else
+        {
+            CheckMove();
+            if (Time.time > lastTick + currentSpeed)
+            {
+                lastTick = Time.time;
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    var comp = lines[i].GetComponent<LineScript>();
+                    var livelost = comp.Tick();
+                    if (livelost)
+                    {
+                        lives--;
+                        liveText.GetComponent<Text>().text = (lives >= 0) ? lives.ToString() : "0";
+                        
+                    }
 
-        pointsText.GetComponent<Text>().text = Mathf.Floor(points).ToString();
+                }
+            }
+            if (lives <= 0)
+            {
+                EndGame();
+            }
+            CheckPoints();
+            CheckSpeedUp();
+
+            pointsText.GetComponent<Text>().text = Mathf.Floor(points).ToString();
+        }
     }
 
     private void EndGame()
     {
-
+        endPoints.text = "Points: " + Mathf.Floor(points).ToString();
+        endScreen.enabled = true;
+        running = false;
     }
 
     private void CheckPoints() {
@@ -86,6 +105,24 @@ public class Game : MonoBehaviour {
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
             ChangePosition(true);
+        }
+    }
+
+    private void CheckStart()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow) || Input.GetKeyDown(KeyCode.LeftArrow))
+        {
+            startScreen.enabled = false;
+            endScreen.enabled = false;
+            lives = 3;
+            liveText.GetComponent<Text>().text = (lives >= 0) ? lives.ToString() : "0";
+            points = 0;
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var comp = lines[i].GetComponent<LineScript>();
+                comp.Collect();
+            }
+            running = true;
         }
     }
 
