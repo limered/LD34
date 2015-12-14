@@ -12,9 +12,13 @@ public class Game : MonoBehaviour {
 
     private float currentSpeed = 1.5f;
     private float speedDiff = 0.15f;
+    private float nextSpeedUp = 50;
     private float lastTick = 0;
 
     private int flowerPosition = 2;
+
+    public float points = 0;
+    public int lives = 3;
 
     // Use this for initialization
     void Start () {
@@ -32,9 +36,49 @@ public class Game : MonoBehaviour {
                 comp.Tick();
             }
         }
+        CheckPoints();
+        CheckSpeedUp();
+        CheckLives();
     }
 
-    public void CheckMove() {
+    private void CheckLives() {
+        for (int i = 0; i < lines.Length; i++)
+        {
+            var comp = lines[i].GetComponent<LineScript>();
+            if(comp.currentDrop == 5)
+            {
+                lives--;
+            }
+        }
+        if(lives == 0)
+        {
+            EndGame();
+        }
+    }
+
+    private void EndGame()
+    {
+
+    }
+
+    private void CheckPoints() {
+        var currentLine = lines[flowerPosition].GetComponent<LineScript>();
+        if (currentLine.currentDrop == 4)
+        {
+            points += 0.5f * Time.time;
+            currentLine.Collect();
+        }
+    }
+
+    private void CheckSpeedUp() {
+        if(points != 0 && points > nextSpeedUp)
+        {
+            currentSpeed -= speedDiff;
+            nextSpeedUp = points + points * 2;
+        }
+    }
+
+    private void CheckMove() {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
             ChangePosition(false);
@@ -45,7 +89,7 @@ public class Game : MonoBehaviour {
         }
     }
 
-    public void ChangePosition(bool left) {
+    private void ChangePosition(bool left) {
         if (left)
             flowerPosition = (flowerPosition == 0) ? 0 : flowerPosition-1;
         else

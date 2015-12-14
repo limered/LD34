@@ -10,6 +10,11 @@ public class LineScript : MonoBehaviour
         NextDrop();
     }
 
+    public void Collect() {
+        currentDrop = 0;
+        TurnOffDrops();
+    }
+
     private void StartDrop()
     {
         var prop = Random.value;
