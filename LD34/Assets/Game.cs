@@ -18,6 +18,10 @@ public class Game : MonoBehaviour {
     public Canvas endScreen;
     public Text endPoints;
 
+    public AudioSource beep;
+    public AudioSource pointBeep;
+    public AudioSource lostBeep;
+
     private float currentSpeed = 1.5f;
     private float speedDiff = 0.15f;
     private float nextSpeedUp = 50;
@@ -27,8 +31,8 @@ public class Game : MonoBehaviour {
 
     private bool running = false;
 
-    public float points = 0;
-    public int lives = 3;
+    private float points = 0;
+    private int lives = 3;
 
     // Use this for initialization
     void Start () {
@@ -49,6 +53,7 @@ public class Game : MonoBehaviour {
             if (Time.time > lastTick + currentSpeed)
             {
                 lastTick = Time.time;
+
                 for (int i = 0; i < lines.Length; i++)
                 {
                     var comp = lines[i].GetComponent<LineScript>();
@@ -57,7 +62,6 @@ public class Game : MonoBehaviour {
                     {
                         lives--;
                         liveText.GetComponent<Text>().text = (lives >= 0) ? lives.ToString() : "0";
-                        
                     }
 
                 }
@@ -117,6 +121,10 @@ public class Game : MonoBehaviour {
             lives = 3;
             liveText.GetComponent<Text>().text = (lives >= 0) ? lives.ToString() : "0";
             points = 0;
+            currentSpeed = 1.5f;
+            nextSpeedUp = 50;
+            lastTick = 0;
+
             for (int i = 0; i < lines.Length; i++)
             {
                 var comp = lines[i].GetComponent<LineScript>();
