@@ -22,6 +22,8 @@ public class Game : MonoBehaviour {
     public AudioSource pointBeep;
     public AudioSource lostBeep;
 
+    private float gameStart;
+
     private float currentSpeed = 1.5f;
     private float speedDiff = 0.15f;
     private float nextSpeedUp = 50;
@@ -88,7 +90,7 @@ public class Game : MonoBehaviour {
         var currentLine = lines[flowerPosition].GetComponent<LineScript>();
         if (currentLine.currentDrop == 4)
         {
-            points += 0.5f * Time.time;
+            points += 0.5f * (Time.time - gameStart);
             currentLine.Collect();
         }
     }
@@ -124,6 +126,8 @@ public class Game : MonoBehaviour {
             currentSpeed = 1.5f;
             nextSpeedUp = 50;
             lastTick = 0;
+
+            gameStart = Time.time;
 
             for (int i = 0; i < lines.Length; i++)
             {
